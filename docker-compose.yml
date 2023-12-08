@@ -1,0 +1,30 @@
+version: '3'
+services:
+  frontend:
+    container_name: money-transfer-front
+    restart: always
+    build:
+      context: ./front-money-transfer
+    ports:
+      - "3000:3000"
+      
+  backend:
+    container_name: money-transfer-back
+    restart: always
+    build:
+      context: ./jp-builds
+      dockerfile: app.Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend_integration_test #стартуем после запуска контейнерадля интеграционноготестирования
+      
+  backend_integration_test:
+    container_name: money-transfer-back-integratest
+    image: money_transfer_back_integratest
+    restart: always
+    build:
+      context: ./jp-builds
+      dockerfile: app_integra.Dockerfile
+    ports:
+      - "8079:8079"
